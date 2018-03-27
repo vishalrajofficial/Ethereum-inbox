@@ -7,6 +7,9 @@ const ganache = require('ganache-cli');
 // constructor functions have an uppercase character to begin
 const Web3 = require('web3');
 const web3 = new Web3(ganache.provider());
+const { interface, bytecode } = require('../compile');
+
+let accounts;
 
 beforeEach(() => {
   // Get a list of all accounts
@@ -15,6 +18,15 @@ beforeEach(() => {
   });
 
   // Use one of these accounts to deploy the contract
+  new web3.eth.Contract(JSON.parse(interface))
+    .deploy({
+      data: bytecode,
+      arguments: ['Hi there!']
+    })
+    .send({
+      from: accounts[0],
+      gas: '1000000'
+    });
 });
 
 describe('Inbox', () => {
